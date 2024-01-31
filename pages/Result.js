@@ -1,8 +1,10 @@
-import { BackHandler, Image } from "react-native";
+import { BackHandler, Image, Modal, ScrollView } from "react-native";
 import { TouchableOpacity, Text, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import result from '../assets/result.png'
+import doc from '../assets/doc.png'
 import { getItem, setItem } from "../assets/misc";
+import { listArticle } from "./listArticle";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -17,6 +19,7 @@ export default function Result({ navigation }) {
    const [height, setHeight] = useState(0)
    const [weight, setWeight] = useState(0)
    const [calcResult, setCalcResult] = useState(null)
+   const [showModal, setShowModal] = useState(false)
    const hitungBMI = () => {
       let bbIdeal = 0
       let indexBMI = 0
@@ -56,14 +59,47 @@ export default function Result({ navigation }) {
    }, [])
    return (
       <SafeAreaView style={styles.container}>
+         <Modal
+            visible={showModal}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setShowModal(false)}
+         >
+            <ScrollView style={styles.modalWrapper}>
+               <View>
+                  <Text style={styles.modalTitle}>Rekomendasi untuk Anda</Text>
+               </View>
+               <View>
+                  <Text style={styles.modalTitle}>Tips lainnya</Text>
+                  <View style={styles.artWrapper}>
+                     {
+                        listArticle.filter(it => it.category == 'all').map(it => (
+                           <View key={it.id}>
+                              <CardArticle data={it} />
+                           </View>
+                        ))
+                     }
+                  </View>
+               </View>
+            </ScrollView>
+         </Modal>
          <View style={styles.boxres}>
             <Text style={styles.subtitle}>Index BMI</Text>
             <Text style={styles.bmires}>{calcResult ? (calcResult.indexBMI).toFixed(2) : 0}</Text>
             <Text style={[styles.jenisres, cekColor(jenisBadan)]}>{jenisBadan}</Text>
             <Text style={styles.bb}>Kisaran Berat Badan Ideal <Text style={styles.hijau}>{calcResult ? calcResult.bbIdeal : 0} kg</Text></Text>
             <View style={styles.nasihat}>
-               <Text style={styles.tips}>Tips :</Text>
+               <Text style={styles.tips}>Informasi :</Text>
                <Text style={styles.nasihatkata}>"{motivate[jenisBadan]}"</Text>
+               <View style={styles.btnBotHealth}>
+                  <TouchableOpacity
+                     activeOpacity={0.8}
+                     onPress={() => setShowModal(true)}
+                     style={styles.btnHealth}
+                  >
+                     <Text style={styles.healthText}>Tips Sehat</Text>
+                  </TouchableOpacity>
+               </View>
             </View>
             <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate("Home")}>
                <Text style={styles.selesai}>Periksa Kembali</Text>
@@ -74,7 +110,94 @@ export default function Result({ navigation }) {
    )
 }
 
+const CardArticle = ({ data }) => {
+   const { id, title, link, category } = data
+   return (
+      <TouchableOpacity activeOpacity={0.9} style={styles.cardtips}>
+         {
+            category != 'all' ? (
+               <Text style={styles.rekomenBadge}>Rekomendasi</Text>
+            ) : false
+         }
+         <Image source={doc} style={styles.cardImg} resizeMode="contain" />
+         <View style={styles.cardContent}>
+            <Text style={styles.artTitle}>{title}</Text>
+            <Text style={styles.artSource}>Source: detik.com</Text>
+         </View>
+      </TouchableOpacity>
+   )
+}
+
 const styles = StyleSheet.create({
+   artTitle: {
+      fontWeight: '500',
+      lineHeight: 20,
+      color: '#435585',
+      marginBottom: 4
+   },
+   rekomenBadge: {
+      position: 'absolute',
+      backgroundColor: '#F99417',
+      color: 'white',
+      top: 0,
+      right: 12,
+      padding: 4,
+      borderBottomRightRadius: 4,
+      zIndex: 2,
+      borderBottomLeftRadius: 4,
+      fontSize: 10,
+   },
+   cardContent: {
+      width: '80%',
+   },
+   artSource: {
+      color: 'rgb(150,150,150)'
+   },
+   cardtips: {
+      flexDirection: 'row',
+      position: 'relative',
+      alignItems: 'center',
+      gap: 12,
+      borderColor: 'rgb(230,230,230)',
+      borderWidth: 0.5,
+      padding: 12,
+      paddingHorizontal: 8,
+      backgroundColor: 'white',
+      borderRadius: 8,
+   },
+   cardImg: {
+      width: '15%',
+      height: '100%',
+   },
+   artWrapper: {
+      paddingVertical: 8,
+      gap: 8,
+   },
+   modalWrapper: {
+      backgroundColor: '#fefefe',
+      padding: 24,
+      borderTopLeftRadius: 24,
+      borderTopRightRadius: 24,
+   },
+   modalTitle: {
+      fontSize: 20,
+      marginBottom: 12,
+      fontWeight: '500',
+      color: '#435585',
+   },
+   btnBotHealth: {
+      paddingTop: 24,
+      alignItems: "flex-end"
+   },
+   btnHealth: {
+      padding: 8,
+      paddingHorizontal: 12,
+      backgroundColor: '#068FFF',
+      borderRadius: 6,
+   },
+   healthText: {
+      color: 'white'
+   },
    wrap: {
       justifyContent: 'center',
       alignItems: 'center',
@@ -174,7 +297,7 @@ const styles = StyleSheet.create({
       textAlign: 'center'
    },
    selesai: {
-      textAlign: 'right',
+      textAlign: 'center',
       marginTop: 32,
       fontSize: 16,
       color: '#537188'

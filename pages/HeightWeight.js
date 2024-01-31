@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Dimensions } from "react-native";
+import { Text, View, TouchableOpacity, TextInput, Image, ScrollView, Dimensions, Alert } from "react-native";
 import { StyleSheet, Modal } from "react-native";
 import heightimage from '../assets/height.png'
 import calculate from '../assets/Coding.png'
@@ -12,11 +12,15 @@ export default function HeightWeight({ navigation }) {
    const [weight, setWeight] = useState('')
    const [isLoading, setIsLoading] = useState(false)
    const handleShowResult = () => {
-      setIsLoading(true)
-      setTimeout(() => {
-         setIsLoading(false)
-         navigation.navigate('Results')
-      }, 3000)
+      if (height && weight) {
+         setIsLoading(true)
+         setTimeout(() => {
+            setIsLoading(false)
+            navigation.navigate('Results')
+         }, 3000)
+      } else {
+         Alert.alert('Lengkapi Data', 'Silahkan lengkapi isian berat dan tinggi badanmu terlebih dulu ya.')
+      }
    }
    useEffect(() => {
       weight ? setItem('weight', weight) : false
@@ -50,11 +54,11 @@ export default function HeightWeight({ navigation }) {
             <Text style={styles.title}>Lengkapi Data </Text>
             <View style={styles.wrapinp}>
                <Text style={styles.subtitle}>Masukkan Tinggi Badanmu ya (cm).  </Text>
-               <TextInput value={height} onChangeText={setHeight} inputMode="numeric" placeholder="e.g. 140" style={styles.input} />
+               <TextInput value={height} cursorColor="#aaa" onChangeText={setHeight} inputMode="numeric" placeholder="e.g. 140" style={styles.input} />
             </View>
             <View style={styles.wrapinp}>
                <Text style={styles.subtitle}>Selanjutnya, Berat Badanmu (kg).  </Text>
-               <TextInput value={weight} onChangeText={setWeight} inputMode="numeric" placeholder="e.g. 48" style={styles.input} />
+               <TextInput value={weight} cursorColor="#aaa" onChangeText={setWeight} inputMode="numeric" placeholder="e.g. 48" style={styles.input} />
             </View>
          </View>
 
@@ -80,13 +84,15 @@ const styles = StyleSheet.create({
       paddingTop: 48,
    },
    titleLoading: {
-      fontSize: 24,
+      fontSize: 28,
+      color: '#435585',
       textAlign: "center",
       fontWeight: "500",
    },
    subtLoading: {
       textAlign: "center",
       paddingTop: 12,
+      color: '#818FB4',
       fontSize: 16,
       color: 'rgb(120,120,120)'
    },
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
    input: {
       padding: 12,
       fontSize: 18,
-      backgroundColor: 'rgb(250,250,250)',
+      backgroundColor: 'rgb(253,253,253)',
       alignSelf: 'stretch',
       borderColor: 'rgb(230,230,230)',
       color: '#435585',
@@ -146,10 +152,9 @@ const styles = StyleSheet.create({
    },
    wrap: {
       paddingHorizontal: 24,
-      paddingTop: '30%',
+      paddingTop: '12%',
       justifyContent: 'flex-start',
       alignSelf: 'stretch',
-      height: '80%',
    },
    title: {
       marginTop: 0,

@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'rea
 import man from '../assets/man.png'
 import { setItem, getItem } from '../assets/misc';
 import woman from '../assets/woman.png'
+import genderImg from '../assets/gender.png'
 import { useState, useEffect } from 'react';
 
 export default function Gender({ navigation }) {
@@ -19,6 +20,7 @@ export default function Gender({ navigation }) {
    }, [])
    return (
       <View style={styles.container}>
+         <Image source={genderImg} style={styles.imgBg} contentFit="cover" />
          <View style={styles.wrap}>
             <Text style={styles.title}>Pilih Gender</Text>
             <Text style={styles.subtitle}>Silahkan pilih gender terlebih dahulu ya </Text>
@@ -48,13 +50,12 @@ export default function Gender({ navigation }) {
                   <Image source={woman} style={styles.personimage} contentFit='cover' />
                </View>
             </TouchableOpacity>
-            {/* <Image source={welcome} style={styles.image} contentFit='cover' /> */}
+            {
+               gender ? (
+                  <Text style={[styles.textgen, gender == 'Pria' ? styles.pria : styles.wanita]}>Gender yang kamu pilih {gender}</Text>
+               ) : false
+            }
          </View>
-         {
-            gender ? (
-               <Text style={[styles.textgen, gender == 'Pria' ? styles.pria : styles.wanita]}>Gender yang kamu pilih {gender}</Text>
-            ) : false
-         }
          <TouchableOpacity
             activeOpacity={1}
             style={styles.button}
@@ -76,11 +77,20 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(218, 12, 129, 0.15)',
       color: 'rgb(218, 12, 129)',
    },
+   imgBg: {
+      width: 270,
+      height: 350,
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+   },
    textgen: {
       fontSize: 16,
-      padding: 12,
+      padding: 16,
       marginBottom: 100,
       paddingHorizontal: 24,
+      width: '100%',
+      textAlign: 'center',
       borderRadius: 50,
       color: 'white'
    },
@@ -113,7 +123,6 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       padding: 8,
       paddingHorizontal: 24,
-      // flex: 1,
    },
    personimage: {
       width: 70,
@@ -121,9 +130,9 @@ const styles = StyleSheet.create({
    },
    wrap: {
       paddingHorizontal: 24,
+      paddingTop: '20%',
       justifyContent: 'center',
       alignSelf: 'stretch',
-      height: '80%',
    },
    image: {
       width: 280,
