@@ -8,7 +8,7 @@ export default function Home({ navigation }) {
          <View style={styles.wrap}>
             <Image source={welcome} style={styles.image} contentFit='cover' />
             <Text style={styles.title}>Body Mass Index Calculator</Text>
-            <Text style={styles.subtitle}>Temukan Kesehatan Ideal Anda dengan Mudah!</Text>
+            <Text style={styles.subtitle}>Pantau Kesehatan Tubuh, Lewat Berat Badanmu.</Text>
          </View>
          <TouchableOpacity
             activeOpacity={1}

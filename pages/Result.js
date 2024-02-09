@@ -68,8 +68,17 @@ export default function Result({ navigation }) {
             <ScrollView style={styles.modalWrapper}>
                <View>
                   <Text style={styles.modalTitle}>Rekomendasi untuk Anda</Text>
+                  <View style={styles.artWrapper}>
+                     {
+                        listArticle.filter(it => it.category == jenisBadan).map(it => (
+                           <View key={it.id}>
+                              <CardArticle data={it} />
+                           </View>
+                        ))
+                     }
+                  </View>
                </View>
-               <View>
+               <View >
                   <Text style={styles.modalTitle}>Tips lainnya</Text>
                   <View style={styles.artWrapper}>
                      {
@@ -139,13 +148,12 @@ const styles = StyleSheet.create({
       position: 'absolute',
       backgroundColor: '#F99417',
       color: 'white',
-      top: 0,
-      right: 12,
+      top: 4,
+      left: 4,
       padding: 4,
-      borderBottomRightRadius: 4,
+      borderRadius: 4,
       zIndex: 2,
-      borderBottomLeftRadius: 4,
-      fontSize: 10,
+      fontSize: 8,
    },
    cardContent: {
       width: '80%',
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
       position: 'relative',
       alignItems: 'center',
       gap: 12,
-      borderColor: 'rgb(230,230,230)',
+      borderColor: 'rgb(220,220,220)',
       borderWidth: 0.5,
       padding: 12,
       paddingHorizontal: 8,
@@ -171,11 +179,13 @@ const styles = StyleSheet.create({
    },
    artWrapper: {
       paddingVertical: 8,
+      paddingBottom: 32,
       gap: 8,
    },
    modalWrapper: {
-      backgroundColor: '#fefefe',
+      backgroundColor: '#fcfcfc',
       padding: 24,
+      paddingTop: 16,
       borderTopLeftRadius: 24,
       borderTopRightRadius: 24,
    },
