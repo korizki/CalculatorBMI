@@ -78,7 +78,7 @@ export default function HeightWeight({ navigation }) {
 const styles = StyleSheet.create({
    modalBg: {
       justifyContent: "flex-end",
-      height: Dimensions.get("window").height,
+      height: Dimensions.get("screen").height,
    },
    textLoading: {
       paddingTop: 48,
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
    },
    modalWrapper: {
       backgroundColor: 'white',
-      height: Dimensions.get('window').height / 2,
+      height: Dimensions.get('screen').height / 2,
       alignItems: 'center',
       borderTopRightRadius: 24,
       borderTopLeftRadius: 24,

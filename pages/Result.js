@@ -1,5 +1,5 @@
 import { BackHandler, Image, Modal, ScrollView } from "react-native";
-import { TouchableOpacity, Text, View, StyleSheet, Dimensions } from "react-native";
+import { TouchableOpacity, Text, Linking, View, StyleSheet, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import result from '../assets/result.png'
 import doc from '../assets/doc.png'
@@ -97,6 +97,7 @@ export default function Result({ navigation }) {
             <Text style={styles.bmires}>{calcResult ? (calcResult.indexBMI).toFixed(2) : 0}</Text>
             <Text style={[styles.jenisres, cekColor(jenisBadan)]}>{jenisBadan}</Text>
             <Text style={styles.bb}>Kisaran Berat Badan Ideal <Text style={styles.hijau}>{calcResult ? calcResult.bbIdeal : 0} kg</Text></Text>
+            <Text style={styles.bb}>Nilai Index Ideal <Text style={styles.hijau}> 18.5 - 24.9 </Text></Text>
             <View style={styles.nasihat}>
                <Text style={styles.tips}>Informasi :</Text>
                <Text style={styles.nasihatkata}>"{motivate[jenisBadan]}"</Text>
@@ -121,8 +122,20 @@ export default function Result({ navigation }) {
 
 const CardArticle = ({ data }) => {
    const { id, title, link, category } = data
+   const handleOpenUrl = useCallback(async () => {
+      const isSupport = await Linking.canOpenURL(link)
+      if (isSupport) {
+         await Linking.openURL(link)
+      } else {
+         Alert.alert("Sorry, Can't open URL, please choose other.")
+      }
+   }, [link])
    return (
-      <TouchableOpacity activeOpacity={0.9} style={styles.cardtips}>
+      <TouchableOpacity
+         activeOpacity={0.9}
+         onPress={handleOpenUrl}
+         style={styles.cardtips}
+      >
          {
             category != 'all' ? (
                <Text style={styles.rekomenBadge}>Rekomendasi</Text>
@@ -251,7 +264,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
    },
    boxres: {
-      marginVertical: 24
+      marginBottom: 24
    },
    bmires: {
       textAlign: "center",
@@ -261,7 +274,7 @@ const styles = StyleSheet.create({
    jenisres: {
       fontSize: 24,
       fontWeight: "bold",
-      marginTop: 16,
+      marginVertical: 16,
       textAlign: 'center'
    },
    red: {
